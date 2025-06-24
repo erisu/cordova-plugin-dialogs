@@ -488,33 +488,20 @@ public class Notification extends CordovaPlugin {
 
     @SuppressLint("NewApi")
     private Builder createDialog(CordovaInterface cordova) {
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            return new Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-        } else {
-            return new Builder(cordova.getActivity());
-        }
+        return new Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
     }
 
     @SuppressLint("InlinedApi")
     private ProgressDialog createProgressDialog(CordovaInterface cordova) {
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return new ProgressDialog(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-        } else {
-            return new ProgressDialog(cordova.getActivity());
-        }
+        return new ProgressDialog(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
     }
 
     @SuppressLint("NewApi")
     private void changeTextDirection(Builder dlg){
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         dlg.create();
         AlertDialog dialog = dlg.show();
         dialogs.add(dialog);
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            TextView messageview = dialog.findViewById(android.R.id.message);
-            messageview.setTextDirection(android.view.View.TEXT_DIRECTION_LOCALE);
-        }
+        TextView messageView = dialog.findViewById(android.R.id.message);
+        messageView.setTextDirection(android.view.View.TEXT_DIRECTION_LOCALE);
     }
 }
