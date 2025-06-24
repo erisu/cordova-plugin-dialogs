@@ -21,7 +21,6 @@ package org.apache.cordova.dialogs;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -56,11 +55,6 @@ public class Notification extends CordovaPlugin {
     private static final String ACTION_ALERT          = "alert";
     private static final String ACTION_CONFIRM        = "confirm";
     private static final String ACTION_PROMPT         = "prompt";
-    private static final String ACTION_ACTIVITY_START = "activityStart";
-    private static final String ACTION_ACTIVITY_STOP  = "activityStop";
-    private static final String ACTION_PROGRESS_START = "progressStart";
-    private static final String ACTION_PROGRESS_VALUE = "progressValue";
-    private static final String ACTION_PROGRESS_STOP  = "progressStop";
     private static final String ACTION_DISMISS_PREVIOUS  = "dismissPrevious";
     private static final String ACTION_DISMISS_ALL  = "dismissAll";
 
@@ -68,10 +62,6 @@ public class Notification extends CordovaPlugin {
     private static final long BEEP_WAIT_TINE = 100;
 
     private ArrayList<AlertDialog> dialogs = new ArrayList<>();
-
-    public int confirmResult = -1;
-    public ProgressDialog spinnerDialog = null;
-    public ProgressDialog progressDialog = null;
 
     /**
      * Constructor.
@@ -109,21 +99,6 @@ public class Notification extends CordovaPlugin {
             case ACTION_PROMPT:
                 this.prompt(args.getString(0), args.getString(1), args.getJSONArray(2), args.getString(3), callbackContext);
                 return true;
-            case ACTION_ACTIVITY_START:
-                this.activityStart(args.getString(0), args.getString(1));
-                break;
-            case ACTION_ACTIVITY_STOP:
-                this.activityStop();
-                break;
-            case ACTION_PROGRESS_START:
-                this.progressStart(args.getString(0), args.getString(1));
-                break;
-            case ACTION_PROGRESS_VALUE:
-                this.progressValue(args.getInt(0));
-                break;
-            case ACTION_PROGRESS_STOP:
-                this.progressStop();
-                break;
             case ACTION_DISMISS_PREVIOUS:
                 this.dismissPrevious(callbackContext);
                 break;
@@ -182,7 +157,6 @@ public class Notification extends CordovaPlugin {
         final CordovaInterface cordova = this.cordova;
 
         Runnable runnable = () -> {
-
             Builder dlg = createDialog(cordova);
             dlg.setMessage(message);
             dlg.setTitle(title);
@@ -401,99 +375,9 @@ public class Notification extends CordovaPlugin {
         }
     }
 
-    /**
-     * Show the spinner.
-     *
-     * @param title     Title of the dialog
-     * @param message   The message of the dialog
-     */
-    public synchronized void activityStart(final String title, final String message) {
-        if (this.spinnerDialog != null) {
-            this.spinnerDialog.dismiss();
-            this.spinnerDialog = null;
-        }
-        final Notification notification = this;
-        final CordovaInterface cordova = this.cordova;
-        Runnable runnable = () -> {
-            notification.spinnerDialog = createProgressDialog(cordova);
-            notification.spinnerDialog.setTitle(title);
-            notification.spinnerDialog.setMessage(message);
-            notification.spinnerDialog.setCancelable(true);
-            notification.spinnerDialog.setIndeterminate(true);
-            notification.spinnerDialog.setOnCancelListener(
-                    dialog -> notification.spinnerDialog = null);
-            notification.spinnerDialog.show();
-        };
-        this.cordova.getActivity().runOnUiThread(runnable);
-    }
-
-    /**
-     * Stop spinner.
-     */
-    public synchronized void activityStop() {
-        if (this.spinnerDialog != null) {
-            this.spinnerDialog.dismiss();
-            this.spinnerDialog = null;
-        }
-    }
-
-    /**
-     * Show the progress dialog.
-     *
-     * @param title     Title of the dialog
-     * @param message   The message of the dialog
-     */
-    public synchronized void progressStart(final String title, final String message) {
-        if (this.progressDialog != null) {
-            this.progressDialog.dismiss();
-            this.progressDialog = null;
-        }
-        final Notification notification = this;
-        final CordovaInterface cordova = this.cordova;
-        Runnable runnable = () -> {
-            notification.progressDialog = createProgressDialog(cordova);
-            notification.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            notification.progressDialog.setTitle(title);
-            notification.progressDialog.setMessage(message);
-            notification.progressDialog.setCancelable(true);
-            notification.progressDialog.setMax(100);
-            notification.progressDialog.setProgress(0);
-            notification.progressDialog.setOnCancelListener(
-                    dialog -> notification.progressDialog = null);
-            notification.progressDialog.show();
-        };
-        this.cordova.getActivity().runOnUiThread(runnable);
-    }
-
-    /**
-     * Set value of progress bar.
-     *
-     * @param value     0-100
-     */
-    public synchronized void progressValue(int value) {
-        if (this.progressDialog != null) {
-            this.progressDialog.setProgress(value);
-        }
-    }
-
-    /**
-     * Stop progress dialog.
-     */
-    public synchronized void progressStop() {
-        if (this.progressDialog != null) {
-            this.progressDialog.dismiss();
-            this.progressDialog = null;
-        }
-    }
-
     @SuppressLint("NewApi")
     private Builder createDialog(CordovaInterface cordova) {
         return new Builder(cordova.getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-    }
-
-    @SuppressLint("InlinedApi")
-    private ProgressDialog createProgressDialog(CordovaInterface cordova) {
-        return new ProgressDialog(cordova.getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
     }
 
     @SuppressLint("NewApi")
