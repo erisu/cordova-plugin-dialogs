@@ -183,7 +183,7 @@ public class Notification extends CordovaPlugin {
 
         Runnable runnable = () -> {
 
-            Builder dlg = createDialog(cordova); // new AlertDialog.Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            Builder dlg = createDialog(cordova);
             dlg.setMessage(message);
             dlg.setTitle(title);
             dlg.setCancelable(true);
@@ -216,7 +216,7 @@ public class Notification extends CordovaPlugin {
         final CordovaInterface cordova = this.cordova;
 
         Runnable runnable = () -> {
-            Builder dlg = createDialog(cordova); // new AlertDialog.Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            Builder dlg = createDialog(cordova);
             dlg.setMessage(message);
             dlg.setTitle(title);
             dlg.setCancelable(true);
@@ -295,7 +295,7 @@ public class Notification extends CordovaPlugin {
             int promptInputTextColor = resources.getColor(android.R.color.primary_text_light);
             promptInput.setTextColor(promptInputTextColor);
             promptInput.setText(defaultText);
-            Builder dlg = createDialog(cordova); // new AlertDialog.Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            Builder dlg = createDialog(cordova);
             dlg.setMessage(message);
             dlg.setTitle(title);
             dlg.setCancelable(true);
@@ -415,7 +415,7 @@ public class Notification extends CordovaPlugin {
         final Notification notification = this;
         final CordovaInterface cordova = this.cordova;
         Runnable runnable = () -> {
-            notification.spinnerDialog = createProgressDialog(cordova); // new ProgressDialog(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            notification.spinnerDialog = createProgressDialog(cordova);
             notification.spinnerDialog.setTitle(title);
             notification.spinnerDialog.setMessage(message);
             notification.spinnerDialog.setCancelable(true);
@@ -451,7 +451,7 @@ public class Notification extends CordovaPlugin {
         final Notification notification = this;
         final CordovaInterface cordova = this.cordova;
         Runnable runnable = () -> {
-            notification.progressDialog = createProgressDialog(cordova); // new ProgressDialog(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            notification.progressDialog = createProgressDialog(cordova);
             notification.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             notification.progressDialog.setTitle(title);
             notification.progressDialog.setMessage(message);
@@ -488,12 +488,12 @@ public class Notification extends CordovaPlugin {
 
     @SuppressLint("NewApi")
     private Builder createDialog(CordovaInterface cordova) {
-        return new Builder(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        return new Builder(cordova.getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
     }
 
     @SuppressLint("InlinedApi")
     private ProgressDialog createProgressDialog(CordovaInterface cordova) {
-        return new ProgressDialog(cordova.getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        return new ProgressDialog(cordova.getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
     }
 
     @SuppressLint("NewApi")
